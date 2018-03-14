@@ -5,6 +5,8 @@ import './index.css'
 import App from './App'
 
 // router component can only have one child element
+// this is the starting point for the SPA
+
 ReactDOM.render(
   <BrowserRouter>
     <App />
