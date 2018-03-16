@@ -5,9 +5,9 @@ import {
   NavLink,
   Switch
  } from 'react-router-dom'
-import Home from "./Home"
-import About from "./About"
-import Upload from "./Upload"
+import Home from "./components/Home"
+import About from "./components/About"
+import Upload from "./components/Upload"
 import './App.css'
 
 class App extends Component {

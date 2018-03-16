@@ -2,6 +2,7 @@ import React, { Component } from "react"
 
 import FineUploaderTraditional from 'fine-uploader-wrappers'
 import Gallery from 'react-fine-uploader'
+import 'react-fine-uploader/gallery/gallery.css'
 
 const uploader = new FineUploaderTraditional({
     options: {
@@ -25,7 +26,7 @@ class Upload extends Component {
   render() {
     return (
       <div>
-        <h2>Upload?</h2>
+        <h2>Upload your photo here to start match</h2>
         <Gallery uploader={ uploader } />
       </div>
     );
