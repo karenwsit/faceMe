@@ -6,6 +6,7 @@
   "dependencies": {
     "dotenv": "^5.0.1",
     "express": "^4.16.2",
+    "fine-uploader": "^5.16.0",
     "if-env": "^1.0.4",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
@@ -24,7 +25,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "nodenv -f && react-scripts start",
     "start:prod": "react-scripts start"
-
   },
   "author": "Karen Sit",
   "license": "ISC"
