@@ -7,11 +7,14 @@
     "dotenv": "^5.0.1",
     "express": "^4.16.2",
     "fine-uploader": "^5.16.0",
+    "fine-uploader-wrappers": "^1.0.1",
     "if-env": "^1.0.4",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-fine-uploader": "^1.0.9",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.1.1"
+    "react-scripts": "1.1.1",
+    "react-transition-group": "^1.2.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -23,7 +26,7 @@
     "start": "if-env NODE_ENV=production ?? npm run start:prod || npm run start:dev",
     "build": "react-scripts build",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "nodenv -f && react-scripts start",
+    "start:dev": "react-scripts start",
     "start:prod": "react-scripts start"
   },
   "author": "Karen Sit",
