@@ -4,6 +4,7 @@ import path from 'path'
 import about from './routes/about'
 
 let app = express()
+const PORT = process.env.PORT || 3000;
 
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname + '/public/index.html'));
@@ -13,6 +14,6 @@ app.get('/', function (req, res) {
 
 // app.use('/about', about)
 
-app.listen(3000, () => {
-  console.log('FaceMe app is listening on port 3000!')
+app.listen(PORT, () => {
+  console.log(`FaceMe app is listening on port ${PORT}`)
 })

@@ -2,6 +2,9 @@
 require('babel-register')({
     presets: [ 'env' ]
 })
+require('dotenv').config()
+
+console.log('LULZ SECRETS:', process.env.API_SECRET)
 
 // Import the rest of our application.
 module.exports = require('./server.js')

@@ -4,7 +4,9 @@
   "description": "facial recognition",
   "main": "app.js",
   "dependencies": {
+    "dotenv": "^5.0.1",
     "express": "^4.16.2",
+    "if-env": "^1.0.4",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-router-dom": "^4.2.2",
@@ -13,12 +15,16 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
-    "babel-preset-env": "^1.6.1"
+    "babel-preset-env": "^1.6.1",
+    "node-env-run": "^2.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "if-env NODE_ENV=production ?? npm run start:prod || npm run start:dev",
     "build": "react-scripts build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "nodenv -f && react-scripts start",
+    "start:prod": "react-scripts start"
+
   },
   "author": "Karen Sit",
   "license": "ISC"
