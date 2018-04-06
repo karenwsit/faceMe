@@ -4,8 +4,15 @@ import index from './routes/index'
 import about from './routes/about'
 import upload from './routes/upload'
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 let app = express()
+
+
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 app.use('/', index)
 app.use('/about', about)
