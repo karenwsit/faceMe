@@ -220,5 +220,6 @@ router.get('/', (req, res) => {
 })
 
 router.post('/', onUpload)
+router.delete("/:uuid", onDeleteFile)
 
 module.exports = router
