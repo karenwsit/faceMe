@@ -14,7 +14,8 @@ const uploader = new FineUploaderTraditional({
             endpoint: '/upload'
         },
         request: {
-            endpoint: '/upload'
+            endpoint: 'uploadedphotostomatch.s3.amazonaws.com',
+            accessKey: process.env.S3_PUBLIC_ACCESS_KEY
         },
         retry: {
             enableAuto: true
