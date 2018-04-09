@@ -1,10 +1,10 @@
 import React, { Component } from "react"
 
-import FineUploaderTraditional from 'fine-uploader-wrappers'
+import qq from 'fine-uploader'
 import Gallery from 'react-fine-uploader'
 import 'react-fine-uploader/gallery/gallery.css'
 
-const uploader = new FineUploaderTraditional({
+const uploader = new qq.s3.FineUploader({
     options: {
         chunking: {
             enabled: true
@@ -12,16 +12,25 @@ const uploader = new FineUploaderTraditional({
         deleteFile: {
             enabled: true,
             endpoint: '/upload'
-        },
+        }
         request: {
             endpoint: 'uploadedphotostomatch.s3.amazonaws.com',
             accessKey: process.env.S3_PUBLIC_ACCESS_KEY
         },
-        signature: {
-          endpoint: "/s3/signatureHandler"
-        }
         retry: {
             enableAuto: true
+        },
+        signature: {
+          endpoint: '/s3/signature'
+        },
+        uploadSuccess: {
+          endpoint: '/s3/success'
+        },
+        validation: {
+          allowedExtensions: ['gif', 'jpeg', 'jpg', 'png'],
+          acceptFiles: 'image/gif, image/jpeg, impage/png',
+          sizeLimit: 5000000,
+          itemLimit: 1
         }
     }
 })
