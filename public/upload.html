@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="fine-uploader/fine-uploader-gallery.min.css" rel="stylesheet">
-    <script src="fine-uploader/fine-uploader.min.js"></script>
+    <link href="s3.fine-uploader/fine-uploader-gallery.min.css" rel="stylesheet">
+    <script src="s3.fine-uploader/s3.fine-uploader.min.js"></script>
     <script type="text/template" id="qq-template">
         <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="Drop files here">
             <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
@@ -88,7 +88,7 @@
     <div id="uploader"></div>
     <script>
         // Some options to pass to the uploader are discussed on the next page
-        var uploader = new qq.FineUploader({
+        var uploader = new qq.s3.FineUploader({
             element: document.getElementById("uploader")
         })
     </script>
