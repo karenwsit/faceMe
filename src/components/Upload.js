@@ -7,11 +7,11 @@ import 'react-fine-uploader/gallery/gallery.css'
 const uploader = new FineUploaderS3({
     options: {
         request: {
-            endpoint: 'http://fineuploadertest.s3.amazonaws.com',
+            endpoint: 'uploadedphotostomatch.s3.amazonaws.com',
             accessKey: process.env.S3_PUBLIC_ACCESS_KEY
         },
         signature: {
-            endpoint: "/upload"
+            endpoint: "/s3handler"
         }
     }
 })
