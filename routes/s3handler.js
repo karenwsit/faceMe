@@ -4,7 +4,7 @@ import CryptoJS from 'crypto-js'
 
 const clientSecretKey = process.env.S3_SECRET_ACCESS_KEY
 const expectedMinSize = 0
-const expectedMaxSize = 15000000
+const expectedMaxSize = 5000000
 const expectedBucket = 'uploadedphotostomatch'
 const expectedHostname = 'uploadedphotostomatch.s3.amazonaws.com'
 // let s3
@@ -16,11 +16,9 @@ const router = express.Router()
 // Signs any requests.  Delegate to a more specific signer based on type of request.
 function signRequest(req, res) {
     if (req.body.headers) {
-      console.log('Signing Rest Request')
         signRestRequest(req, res);
     }
     else {
-      console.log('Signing Policy')
         signPolicy(req, res);
     }
 }
@@ -75,7 +73,6 @@ function signPolicy(req, res) {
         res.end(JSON.stringify(jsonResponse));
     }
     else {
-      console.log('it hitting here no good')
         res.status(400);
         res.end(JSON.stringify({invalid: true}));
     }
@@ -116,8 +113,6 @@ function isValidRestRequest(headerStr, version) {
 function isPolicyValid(policy) {
     var bucket, parsedMaxSize, parsedMinSize, isValid;
 
-    console.log('policy:', policy)
-
     policy.conditions.forEach(function(condition) {
         if (condition.bucket) {
             bucket = condition.bucket;
@@ -129,11 +124,6 @@ function isPolicyValid(policy) {
     });
 
     isValid = bucket === expectedBucket;
-
-    console.log('parsedMinSize:', parsedMinSize)
-    console.log('parsedMaxSize:', parsedMaxSize)
-    console.log('expectedMinSize:', expectedMinSize)
-    console.log('expectedMaxSize:', expectedMaxSize)
 
     // If expectedMinSize and expectedMax size are not null, then
     // ensure that the client and server have agreed upon the exact same
@@ -210,7 +200,6 @@ router.post("/", function(req, res) {
         verifyFileInS3(req, res);
     }
     else {
-      console.log('THIS SHOULD PRINT INSTEAD')
       debugger
         signRequest(req, res);
     }

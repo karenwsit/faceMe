@@ -10,6 +10,13 @@ const uploader = new FineUploaderS3({
             endpoint: 'uploadedphotostomatch.s3.amazonaws.com',
             accessKey: process.env.S3_PUBLIC_ACCESS_KEY
         },
+        validation: {
+          allowedExtensions: ["gif", "jpeg", "jpg", "png"],
+          acceptFiles: "image/gif, image/jpeg, image/png",
+          minSizeLimit: 0,
+          sizeLimit: 5000000,
+          itemLimit: 1
+        },
         signature: {
             endpoint: "/s3handler"
         }
