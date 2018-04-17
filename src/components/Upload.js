@@ -4,6 +4,10 @@ import FineUploaderS3 from 'fine-uploader-wrappers/s3'
 import Gallery from 'react-fine-uploader'
 import 'react-fine-uploader/gallery/gallery.css'
 
+console.log('AWS KEY YO')
+console.log('process envs component:', process.env)
+console.log('right here biatch:', process.env.S3_PUBLIC_ACCESS_KEY)
+
 const uploader = new FineUploaderS3({
     options: {
         request: {
