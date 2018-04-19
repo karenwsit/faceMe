@@ -3,7 +3,6 @@ import React, { Component } from "react"
 import FineUploaderS3 from 'fine-uploader-wrappers/s3'
 import Gallery from 'react-fine-uploader'
 import 'react-fine-uploader/gallery/gallery.css'
-console.log('process envs component:', process.env)
 
 const uploader = new FineUploaderS3({
     options: {

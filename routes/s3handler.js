@@ -200,7 +200,6 @@ router.post("/", function(req, res) {
         verifyFileInS3(req, res);
     }
     else {
-      debugger
         signRequest(req, res);
     }
 });
