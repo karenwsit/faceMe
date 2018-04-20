@@ -19,6 +19,9 @@ const uploader = new FineUploaderS3({
         },
         signature: {
             endpoint: "/s3handler"
+        },
+        uploadSuccess: {
+          endpoint: "/s3handler/success"
         }
     }
 })

@@ -1,15 +1,12 @@
 import express from 'express'
 import CryptoJS from 'crypto-js'
-// import aws from 'aws-sdk'
+import bodyParser from 'body-parser'
 
 const clientSecretKey = process.env.S3_SECRET_ACCESS_KEY
 const expectedMinSize = 0
 const expectedMaxSize = 5000000
 const expectedBucket = 'uploadedphotostomatch'
 const expectedHostname = 'uploadedphotostomatch.s3.amazonaws.com'
-// let s3
-
-// s3 = new aws.s3()
 
 const router = express.Router()
 
@@ -195,6 +192,9 @@ function callS3(type, spec, callback) {
     }, callback)
 }
 
+router.use(bodyParser.json()); // support json encoded bodies
+router.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+
 router.post("/", function(req, res) {
     if (typeof req.query.success !== "undefined") {
         verifyFileInS3(req, res);
@@ -203,6 +203,11 @@ router.post("/", function(req, res) {
         signRequest(req, res);
     }
 });
+
+router.post("/success", function(req, res) {
+  console.log('s3 upload success!')
+  console.log('req:', req.body)
+})
 
 //Handles the standard DELETE (file) request sent by Fine Uploader S3.
 router.delete("/*", function(req, res) {
