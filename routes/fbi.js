@@ -1,14 +1,14 @@
 import express from 'express'
-import request from 'require'
+import request from 'request-promise'
 
 var router = express.Router()
 
 router.get('/', (req, res) => {
-  request({
+  return request({
     uri: 'https://api.fbi.gov/wanted/v1/list'
   })
-  .then(body => {
-    console.log('BODAY:', body)
+  .then(res => {
+    console.log('RESPONSE:', res)
   })
   .catch(err => {
     console.log('ERR:', err)
