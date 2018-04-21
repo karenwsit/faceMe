@@ -17,7 +17,8 @@
     "react-fine-uploader": "^1.0.9",
     "react-router-dom": "^4.2.2",
     "react-scripts": "^1.1.1",
-    "react-transition-group": "^1.2.1"
+    "react-transition-group": "^1.2.1",
+    "request": "^2.85.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

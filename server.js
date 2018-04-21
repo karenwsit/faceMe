@@ -5,6 +5,7 @@ import index from './routes/index'
 import about from './routes/about'
 import upload from './routes/upload'
 import s3handler from './routes/s3handler'
+import fbi from './routes/fbi'
 
 const PORT = process.env.PORT || 8080;
 let app = express()
@@ -15,6 +16,7 @@ app.use('/upload', upload)
 app.use(bodyParser.json())
 app.use(express.static(__dirname))
 app.use('/s3handler', s3handler)
+app.use('/fbi', fib)
 
 app.listen(PORT, () => {
   console.log(`FaceMe app is listening on port ${PORT}`)
