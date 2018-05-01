@@ -3,16 +3,15 @@ import request from 'request-promise'
 
 var router = express.Router()
 
-router.get('/', (req, res) => {
-  return request({
-    uri: 'https://api.fbi.gov/wanted/v1/list'
-  })
-  .then(res => {
-    console.log('RESPONSE:', res)
-  })
-  .catch(err => {
-    console.log('ERR:', err)
-  })
+router.get('/', async (req, res, next) => {
+  try {
+    const fbiImages = request({
+      uri: 'https://api.fbi.gov/wanted/v1/list'
+    })
+    res.json(fbiImages)
+  } catch (e) {
+    next(e)
+  }
 })
 
 module.exports = router
