@@ -19,7 +19,7 @@ const getSubjects = (item) => {
   }
 }
 
-router.get('/', async (req, res, next) => {
+router.get('/', (req, res, next) => {
   return request({
     uri: 'https://api.fbi.gov/wanted/v1/list',
     qs: {
@@ -37,12 +37,14 @@ router.get('/', async (req, res, next) => {
     console.log('fbiImages.total', fbiImages.total)
     console.log('fbiImages.page', fbiImages.page)
     console.log('LEN:', fbiImages.items.length)
-    fbiImages.items.forEach(getSubjects)
-    res.send(fbiImages)
-    })
-  .catch (e) {
+    return { fbiImages: fbiImages.items,  }
+  })
+  .then(fb => {
+    fbiImages.forEach(getSubjects)
+  })
+  .catch(e =>
     next(e)
-  }
+  )
 })
 
 module.exports = router
