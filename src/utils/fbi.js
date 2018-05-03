@@ -1,0 +1,5 @@
+const fetchAllItems = () => {
+  let allItems = []
+
+
+}
