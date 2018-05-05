@@ -3,9 +3,19 @@ import request from 'request-promise'
 
 var router = express.Router()
 
-let allItems = []
 let subjects = {}
-let page = 1
+const fbiURL = 'https://api.fbi.gov/wanted/v1/list'
+
+const getWantedList = async (page, totalItems) => {
+  if (totalItems && page < total/20) {
+    return []
+  }
+  let { items, total } = await request({
+    uri: fbiURL,
+    qs: { page }
+  })
+  return getWantedList.concat(getWantedList(page+1, total))
+}
 
 const getSubjects = (item) => {
   if (item.subjects) {
@@ -20,30 +30,33 @@ const getSubjects = (item) => {
 }
 
 router.get('/', (req, res, next) => {
-  return request({
-    uri: 'https://api.fbi.gov/wanted/v1/list',
-    qs: {
-      page
-    }
-  })
+  return getWantedList()
+  //   uri: fbiURL,
+  //   qs: {
+  //     page
+  //   }
+  // })
   .then(res => {
     const fbiImages = JSON.parse(res)
-    const total = fbiImages.total
-    const itemsLen = fbiImages.items.length
-    const numberOfCalls = Math.round(total/itemsLen)
-    while (page < numberOfCalls) {
-      page++
-    }
-    console.log('fbiImages.total', fbiImages.total)
-    console.log('fbiImages.page', fbiImages.page)
-    console.log('LEN:', fbiImages.items.length)
-    return { fbiImages: fbiImages.items,  }
-  })
-  .then(fb => {
-    fbiImages.forEach(getSubjects)
+    console.log('fbiImages!!!!:', fbiImages)
+  //   const total = fbiImages.total
+  //   const itemsLen = fbiImages.items.length
+  //   const numberOfCalls = Math.round(total/itemsLen)
+  //   while (page < numberOfCalls) {
+  //     page++
+  //   }
+  //   console.log('fbiImages.total', fbiImages.total)
+  //   console.log('fbiImages.page', fbiImages.page)
+  //   console.log('LEN:', fbiImages.items.length)
+  //   return { fbiImages: fbiImages.items }
+  // })
+  // .then(fb => {
+  //   const { fbiImages } = fb
+  //   fbiImages.forEach(getSubjects)
+  //   console.log('SUBJECTS:', subjects)
   })
   .catch(e =>
-    next(e)
+    console.log('ERROR:', e)
   )
 })
 
