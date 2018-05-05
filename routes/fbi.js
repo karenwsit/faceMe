@@ -1,6 +1,7 @@
 import express from 'express'
 import request from 'request-promise'
-import fs from 'fs'
+// import fs from 'fs'
+import db from '../src/db'
 
 var router = express.Router()
 
@@ -36,7 +37,7 @@ const getSubjects = (item) => {
 router.get('/', async (req, res, next) => {
   try {
     const response = await getWantedList()
-    fs.writeFileSync('items.json', JSON.stringify(response))
+    // fs.writeFileSync('items.json', JSON.stringify(response))
     console.log('LEN:', response.length)
   } catch (e) {
     console.log('ERROR:', e)
