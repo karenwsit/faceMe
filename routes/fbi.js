@@ -7,7 +7,7 @@ var router = express.Router()
 let subjects = {}
 const fbiURL = 'https://api.fbi.gov/wanted/v1/list'
 
-const getWantedList = async (page=1, totalItems) => {
+const getWantedList = async (page=1, totalItems, wantedPeople=[]) => {
   if (totalItems && page > Math.round(totalItems/20)) {
     return []
   }
@@ -18,8 +18,7 @@ const getWantedList = async (page=1, totalItems) => {
   const { items, total } = JSON.parse(response)
   console.log('total:', total)
   console.log('page:', page)
-  fs.writeFileSync('items.json', JSON.stringify(items))
-  return items.concat(getWantedList(page+1, total))
+  return items.concat( await getWantedList(page+1, total, [...items, ...wantedPeople]))
 }
 
 const getSubjects = (item) => {
@@ -37,7 +36,8 @@ const getSubjects = (item) => {
 router.get('/', async (req, res, next) => {
   try {
     const response = await getWantedList()
-    console.log('fbiImages!!!!:', response.length)
+    fs.writeFileSync('items.json', JSON.stringify(response))
+    console.log('LEN:', response.length)
   } catch (e) {
     console.log('ERROR:', e)
   }
