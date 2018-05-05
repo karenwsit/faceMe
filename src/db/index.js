@@ -1,8 +1,9 @@
 import pg from 'pg'
 
-const { Pool } = pg
-
-const pool = new Pool()
+const pool = new pg.Pool()
+const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/karensit';
+const client = new pg.Client(connectionString);
+client.connect();
 
 module.exports = {
   query: (text, params, callback) => {
@@ -14,7 +15,7 @@ module.exports = {
       callback(err, res)
     })
   },
-  getClient: (callback) {
+  getClient: (callback) => {
     pool.connect((err, client, done) => {
       const query = client.query.bind(client)
 

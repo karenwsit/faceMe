@@ -39,6 +39,9 @@ router.get('/', async (req, res, next) => {
     const response = await getWantedList()
     // fs.writeFileSync('items.json', JSON.stringify(response))
     console.log('LEN:', response.length)
+    console.log('RESPONSE[0]:', response[0])
+    // response.forEach()
+    db.query()
   } catch (e) {
     console.log('ERROR:', e)
   }
