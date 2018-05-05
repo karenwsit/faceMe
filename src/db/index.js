@@ -3,17 +3,20 @@ import pg from 'pg'
 const pool = new pg.Pool()
 const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/karensit';
 const client = new pg.Client(connectionString);
-client.connect();
+client.connect()
 
 module.exports = {
   query: (text, params, callback) => {
     // queries to the db now logging
     const start = Date.now()
-    return pool.query(text, params, (err, res) => {
+    return pool.query(text, params)
+    /*
+    , (err, res) => {
       const duration = Date.now() - start
       console.log('Executed Query', { text, duration, rows: res.rowCount })
       callback(err, res)
-    })
+    }
+    */
   },
   getClient: (callback) => {
     pool.connect((err, client, done) => {

@@ -37,35 +37,21 @@ const getSubjects = (item) => {
 router.get('/', async (req, res, next) => {
   try {
     const response = await getWantedList()
-    // fs.writeFileSync('items.json', JSON.stringify(response))
     console.log('LEN:', response.length)
-    console.log('RESPONSE[0]:', response[0])
-    // response.forEach()
-    db.query()
+    const testResponse = response.slice(0,2)
+    testResponse.forEach((item) => {
+      db.query('INSERT INTO fbi_wanted(uid, subject, url, images) values ($1,$2,$3,$4)', [
+        item.uid,
+        item.subjects,
+        item.url,
+        JSON.stringify(item.images)
+      ])
+    })
+
   } catch (e) {
     console.log('ERROR:', e)
   }
 
-
-  //   const total = fbiImages.total
-  //   const itemsLen = fbiImages.items.length
-  //   const numberOfCalls = Math.round(total/itemsLen)
-  //   while (page < numberOfCalls) {
-  //     page++
-  //   }
-  //   console.log('fbiImages.total', fbiImages.total)
-  //   console.log('fbiImages.page', fbiImages.page)
-  //   console.log('LEN:', fbiImages.items.length)
-  //   return { fbiImages: fbiImages.items }
-  // })
-  // .then(fb => {
-  //   const { fbiImages } = fb
-  //   fbiImages.forEach(getSubjects)
-  //   console.log('SUBJECTS:', subjects)
-  // })
-  // .catch(e =>
-  //   console.log('ERROR:', e)
-  // )
 })
 
 module.exports = router
