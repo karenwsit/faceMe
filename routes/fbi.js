@@ -22,24 +22,11 @@ const getWantedList = async (page=1, totalItems, wantedPeople=[]) => {
   return items.concat( await getWantedList(page+1, total, [...items, ...wantedPeople]))
 }
 
-const getSubjects = (item) => {
-  if (item.subjects) {
-    item.subjects.forEach((subject) => {
-      if (!subjects[subject]) {
-        subjects[subject] = 1
-      } else {
-        subjects[subject] += 1
-      }
-    })
-  }
-}
-
 router.get('/', async (req, res, next) => {
+  // TODO: handle promise rejection
   try {
     const response = await getWantedList()
-    console.log('LEN:', response.length)
-    const testResponse = response.slice(0,2)
-    testResponse.forEach((item) => {
+    response.forEach((item) => {
       db.query('INSERT INTO fbi_wanted(uid, subject, url, images) values ($1,$2,$3,$4)', [
         item.uid,
         item.subjects,
@@ -47,7 +34,6 @@ router.get('/', async (req, res, next) => {
         JSON.stringify(item.images)
       ])
     })
-
   } catch (e) {
     console.log('ERROR:', e)
   }

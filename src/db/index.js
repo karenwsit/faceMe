@@ -9,14 +9,11 @@ module.exports = {
   query: (text, params, callback) => {
     // queries to the db now logging
     const start = Date.now()
-    return pool.query(text, params)
-    /*
-    , (err, res) => {
+    return pool.query(text, params,(err, res) => {
       const duration = Date.now() - start
-      console.log('Executed Query', { text, duration, rows: res.rowCount })
+      console.log('Executed Query', { text, duration })
       callback(err, res)
-    }
-    */
+    })
   },
   getClient: (callback) => {
     pool.connect((err, client, done) => {
