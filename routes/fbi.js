@@ -32,7 +32,12 @@ router.get('/', async (req, res, next) => {
         item.subjects,
         item.url,
         JSON.stringify(item.images)
-      ])
+      ], (err, result) => {
+        if (err) {
+          return next(err)
+        }
+        res.send(result.rows[0])
+      })
     })
   } catch (e) {
     console.log('ERROR:', e)
