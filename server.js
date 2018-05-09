@@ -16,7 +16,6 @@ app.use('/upload', upload)
 app.use(bodyParser.json())
 app.use(express.static(__dirname))
 app.use('/s3handler', s3handler)
-app.use('/fbi', fbi)
 
 app.listen(PORT, () => {
   console.log(`FaceMe app is listening on port ${PORT}`)

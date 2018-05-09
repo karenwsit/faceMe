@@ -1,29 +1,29 @@
-import express from 'express'
 import request from 'request-promise'
-// import fs from 'fs'
 import db from '../src/db'
 
-var router = express.Router()
-
-let subjects = {}
 const fbiURL = 'https://api.fbi.gov/wanted/v1/list'
 
 const getWantedList = async (page=1, totalItems, wantedPeople=[]) => {
   if (totalItems && page > Math.round(totalItems/20)) {
     return []
   }
-  let response  = await request({
-    uri: fbiURL,
-    qs: { page }
-  })
+
+  try {
+    let response  = await request({
+      uri: fbiURL,
+      qs: { page }
+    })
+  } catch (err) {
+    console.log(err)
+  }
+
   const { items, total } = JSON.parse(response)
   console.log('total:', total)
   console.log('page:', page)
   return items.concat( await getWantedList(page+1, total, [...items, ...wantedPeople]))
 }
 
-router.get('/', async (req, res, next) => {
-  // TODO: handle promise rejection
+const updater = async () => {
   try {
     const response = await getWantedList()
     response.forEach((item) => {
@@ -34,9 +34,8 @@ router.get('/', async (req, res, next) => {
         JSON.stringify(item.images)
       ], (err, result) => {
         if (err) {
-          return next(err)
+          console.log(err)
         }
-        res.send(result.rows[0])
       })
     })
   } catch (e) {
@@ -45,4 +44,4 @@ router.get('/', async (req, res, next) => {
 
 })
 
-module.exports = router
+module.exports = updater
