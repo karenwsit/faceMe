@@ -1,7 +1,8 @@
-import request from 'request-promise'
-import db from '../src/db'
+var request = require('request-promise')
+var db = require('../db')
 
 const fbiURL = 'https://api.fbi.gov/wanted/v1/list'
+let res
 
 const getWantedList = async (page=1, totalItems, wantedPeople=[]) => {
   if (totalItems && page > Math.round(totalItems/20)) {
@@ -9,7 +10,7 @@ const getWantedList = async (page=1, totalItems, wantedPeople=[]) => {
   }
 
   try {
-    let response  = await request({
+    res  = await request({
       uri: fbiURL,
       qs: { page }
     })
@@ -17,7 +18,7 @@ const getWantedList = async (page=1, totalItems, wantedPeople=[]) => {
     console.log(err)
   }
 
-  const { items, total } = JSON.parse(response)
+  const { items, total } = JSON.parse(res)
   console.log('total:', total)
   console.log('page:', page)
   return items.concat( await getWantedList(page+1, total, [...items, ...wantedPeople]))
@@ -41,7 +42,6 @@ const updater = async () => {
   } catch (e) {
     console.log('ERROR:', e)
   }
+}
 
-})
-
-module.exports = updater
+updater()

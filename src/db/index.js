@@ -1,4 +1,4 @@
-import pg from 'pg'
+const pg = require('pg')
 
 const pool = new pg.Pool()
 const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/karensit';
