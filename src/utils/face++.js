@@ -5,8 +5,6 @@ var db = require('../db')
 
 const faceKey = process.env.FACEME_API_KEY
 const faceSecret = process.env.FACEME_API_SECRET
-console.log('process.env:', process.env)
-console.log('FACE KEYYYY:', faceKey)
 
 const faceSetURL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/create'
 const detectFaceURL = 'https://api-us.faceplusplus.com/facepp/v3/detect'
@@ -38,7 +36,7 @@ const detectFaceSet = async () => {
   }
   try {
     let response = await request(options)
-    console.log('responsee for detect:', respones)
+    console.log('responsee for detect:', JSON.stringify(response))
 
   } catch (e) {
     console.log('detect FaceSet error:', e)
@@ -46,4 +44,5 @@ const detectFaceSet = async () => {
 }
 
 
-module.exports = detectFaceSet
+// module.exports = detectFaceSet
+detectFaceSet()
