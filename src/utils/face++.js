@@ -1,4 +1,5 @@
-require('../../env.js')
+var dotenv = require('dotenv')
+dotenv.config()
 var request = require('request-promise')
 var db = require('../db')
 

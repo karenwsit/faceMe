@@ -6,7 +6,7 @@ require('babel-register')({
 require("babel-core/register")
 require("babel-polyfill")
 if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config({ silent: true })
+  require('dotenv').config()
   console.log('process env node env:', process.env)
 }
 

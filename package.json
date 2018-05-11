@@ -37,7 +37,7 @@
     "start": "if-env NODE_ENV=production ?? npm run start:prod || npm run start:dev",
     "build": "react-scripts build",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "babel-node start.js --presets es2015,stage-2 react-scripts start",
+    "start:dev": "node --require 'dotenv/config' --require 'babel-register' react-scripts start",
     "start:prod": "react-scripts start"
   },
   "author": "Karen Sit",
