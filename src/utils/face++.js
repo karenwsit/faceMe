@@ -2,6 +2,8 @@ var dotenv = require('dotenv')
 dotenv.config()
 var request = require('request-promise')
 var db = require('../db')
+var RateLimiter = require('limiter').RateLimiter
+var limiter = new RateLimiter(1, 'second')
 
 const faceKey = process.env.FACEME_API_KEY
 const faceSecret = process.env.FACEME_API_SECRET
@@ -53,6 +55,10 @@ const addFace = async (faceToken) => {
 
 const testImage = 'https://s3-us-west-1.amazonaws.com/uploadedphotostomatch/06ceb71a-d42f-47c7-9b89-2a8eca2b0cd6.JPG'
 
+const queueFaceTokens = (faceToken) => {
+  faceToken.concat
+}
+
 const detectFace = async (image_url) => {
   let options = {
     method: 'POST',
@@ -60,19 +66,19 @@ const detectFace = async (image_url) => {
     qs: {
       api_key: faceKey,
       api_secret: faceSecret,
-      image_url
+      image_url: 'http://turitmo.com/wp-content/uploads/2017/11/5NfENkYA.jpg'
     },
     json: true
   }
   try {
     let response = await request(options)
-    const { faces: { face_token }, image_id } = response
-    console.log('face_token', face_token)
+    const { faces, image_id } = response
+    console.log('FACES:', faces)
     // await addFace(face_token)
     // console.log('image_id:', image_id)
 
   } catch (e) {
-    console.log('detect FaceSet error:', e)
+    console.log('detect Face error:', e)
   }
 }
 
@@ -84,7 +90,7 @@ const QUERY =
   CROSS JOIN json_array_elements(images) each_attribute
   WHERE (each_attribute -> 'original') is NOT NULL
   GROUP BY url
-  LIMIT 6;
+  LIMIT 2;
 `
 
 const queryImages = async () => {
@@ -95,10 +101,14 @@ const queryImages = async () => {
     const { rows } = result
     rows.forEach((person) => {
       person.images.forEach((image_url) => {
-        detectFace(image_url)
+        limiter.removeTokens(1, function(err, remainingRequests) {
+          console.log('image_url:', image_url)
+          detectFace(image_url)
+        })
       })
     })
   })
 }
 
 queryImages()
+// detectFace()
