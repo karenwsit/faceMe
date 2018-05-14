@@ -12,6 +12,7 @@ const faceSetToken = process.env.FACE_SET_TOKEN
 const createFaceSetURL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/create'
 const detectFaceURL = 'https://api-us.faceplusplus.com/facepp/v3/detect'
 const addFaceURL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/addface'
+const getDetailFaceSetURL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/getdetail'
 
 const createFaceSetToken = async () => {
   let options = {
@@ -29,6 +30,24 @@ const createFaceSetToken = async () => {
     return faceset_token
   } catch (e) {
     console.log('create FaceSet error:', e)
+  }
+}
+
+const getDetailFaceSet = async () => {
+  let options = {
+    method: 'POST',
+    uri: getDetailFaceSetURL,
+    qs: {
+      api_key: faceKey,
+      api_secret: faceSecret,
+      faceset_token: faceSetToken
+    }
+  }
+  try {
+    let response = await request(options)
+    console.log('faceset details:', response)
+  } catch (e) {
+    console.log('get Detail FaceSet error:', e)
   }
 }
 
@@ -73,10 +92,10 @@ const detectFace = async (image_url) => {
   try {
     let response = await request(options)
     const { faces, image_id } = response
-    console.log('FACES:', faces)
-    // await addFace(face_token)
-    // console.log('image_id:', image_id)
-
+    const face_token = faces[0].face_token
+    limiter.removeTokens(1, (err, remainingRequests) => {
+      addFace(face_token)
+    })
   } catch (e) {
     console.log('detect Face error:', e)
   }
@@ -101,8 +120,7 @@ const queryImages = async () => {
     const { rows } = result
     rows.forEach((person) => {
       person.images.forEach((image_url) => {
-        limiter.removeTokens(1, function(err, remainingRequests) {
-          console.log('image_url:', image_url)
+        limiter.removeTokens(1, (err, remainingRequests) => {
           detectFace(image_url)
         })
       })
@@ -110,5 +128,5 @@ const queryImages = async () => {
   })
 }
 
-queryImages()
-// detectFace()
+// queryImages()
+getDetailFaceSet()
