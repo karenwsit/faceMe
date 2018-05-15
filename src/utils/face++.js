@@ -8,11 +8,11 @@ var limiter = new RateLimiter(1, 'second')
 const faceKey = process.env.FACEME_API_KEY
 const faceSecret = process.env.FACEME_API_SECRET
 const faceSetToken = process.env.FACE_SET_TOKEN
-
+const addFaceURL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/addface'
 const createFaceSetURL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/create'
 const detectFaceURL = 'https://api-us.faceplusplus.com/facepp/v3/detect'
-const addFaceURL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/addface'
 const getDetailFaceSetURL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/getdetail'
+const removeFaceURL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/removeface'
 
 const createFaceSetToken = async () => {
   let options = {
@@ -46,6 +46,25 @@ const getDetailFaceSet = async () => {
   try {
     let response = await request(options)
     console.log('faceset details:', response)
+  } catch (e) {
+    console.log('get Detail FaceSet error:', e)
+  }
+}
+
+const removeAllFaces = async () => {
+  let options = {
+    method: 'POST',
+    uri: removeFaceURL,
+    qs: {
+      api_key: faceKey,
+      api_secret: faceSecret,
+      faceset_token: faceSetToken,
+      face_tokens: "RemoveAllFaceTokens"
+    }
+  }
+  try {
+    let response = await request(options)
+    console.log('removed all face tokens:', response)
   } catch (e) {
     console.log('get Detail FaceSet error:', e)
   }
@@ -92,7 +111,13 @@ const detectFace = async (image_url) => {
   try {
     let response = await request(options)
     const { faces, image_id } = response
+
+    //TODO: Need to store image_id in the database for when cron job runs. Identify which images are removed and which are newly added to decrease latency. Only update face_set with new images and delete face_set old images
+
+    //TODO: Batch face_tokens in arrays of 5 since there is only 1QPS rate limit
+
     const face_token = faces[0].face_token
+
     limiter.removeTokens(1, (err, remainingRequests) => {
       addFace(face_token)
     })
@@ -129,4 +154,5 @@ const queryImages = async () => {
 }
 
 // queryImages()
-getDetailFaceSet()
+// getDetailFaceSet()
+// removeAllFaces()
