@@ -13,6 +13,8 @@ const createFaceSetURL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/crea
 const detectFaceURL = 'https://api-us.faceplusplus.com/facepp/v3/detect'
 const getDetailFaceSetURL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/getdetail'
 const removeFaceURL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/removeface'
+const testImage = 'https://s3-us-west-1.amazonaws.com/uploadedphotostomatch/06ceb71a-d42f-47c7-9b89-2a8eca2b0cd6.JPG'
+const searchFaceURL = 'https://api-us.faceplusplus.com/facepp/v3/search'
 
 const createFaceSetToken = async () => {
   let options = {
@@ -44,8 +46,10 @@ const getDetailFaceSet = async () => {
     }
   }
   try {
-    let response = await request(options)
-    console.log('faceset details:', response)
+    limiter.removeTokens(1, async (err, remainingRequests) => {
+      let response = await request(options)
+      console.log('faceset details:', response)
+    })
   } catch (e) {
     console.log('get Detail FaceSet error:', e)
   }
@@ -63,8 +67,10 @@ const removeAllFaces = async () => {
     }
   }
   try {
-    let response = await request(options)
-    console.log('removed all face tokens:', response)
+    limiter.removeTokens(1, async (err, remainingRequests) => {
+      let response = await request(options)
+      console.log('removed all face tokens:', response)
+    })
   } catch (e) {
     console.log('get Detail FaceSet error:', e)
   }
@@ -83,19 +89,18 @@ const addFace = async (faceToken) => {
     json: true
   }
   try {
-    let response = await request(options)
-    console.log('addedFace res:', response)
-
+    limiter.removeTokens(1, async (err, remainingRequests) => {
+      let response = await request(options)
+      console.log('addedFace res:', response)
+    })
   } catch (e) {
     console.log('detect FaceSet error:', e)
   }
 }
 
-const testImage = 'https://s3-us-west-1.amazonaws.com/uploadedphotostomatch/06ceb71a-d42f-47c7-9b89-2a8eca2b0cd6.JPG'
-
-const queueFaceTokens = (faceToken) => {
-  faceToken.concat
-}
+// const queueFaceTokens = (faceToken) => {
+//   faceToken.concat
+// }
 
 const detectFace = async (image_url) => {
   let options = {
@@ -115,12 +120,7 @@ const detectFace = async (image_url) => {
     //TODO: Need to store image_id in the database for when cron job runs. Identify which images are removed and which are newly added to decrease latency. Only update face_set with new images and delete face_set old images
 
     //TODO: Batch face_tokens in arrays of 5 since there is only 1QPS rate limit
-
-    const face_token = faces[0].face_token
-
-    limiter.removeTokens(1, (err, remainingRequests) => {
-      addFace(face_token)
-    })
+    return faces[0].face_token
   } catch (e) {
     console.log('detect Face error:', e)
   }
@@ -134,7 +134,6 @@ const QUERY =
   CROSS JOIN json_array_elements(images) each_attribute
   WHERE (each_attribute -> 'original') is NOT NULL
   GROUP BY url
-  LIMIT 2;
 `
 
 const queryImages = async () => {
@@ -143,16 +142,36 @@ const queryImages = async () => {
       console.log(err)
     }
     const { rows } = result
+    console.log('rows:', rows.length) // 710
     rows.forEach((person) => {
+      console.log('person:', JSON.stringify(person))
       person.images.forEach((image_url) => {
         limiter.removeTokens(1, (err, remainingRequests) => {
-          detectFace(image_url)
+          let face_token = detectFace(image_url)
+          limiter.removeTokens(1, (err, remainingRequests) => {
+            addFace(face_token)
+          })
         })
       })
     })
   })
 }
 
+const searchFace = async (face_token) => {
+  let options = {
+    method: 'POST',
+    uri: searchFaceURL,
+    qs: {
+      api_key: faceKey,
+      api_secret: faceSecret,
+      face_token,
+      faceset_token: faceSetToken,
+      return_result_count: 5
+    }
+  }
+}
+
 // queryImages()
 // getDetailFaceSet()
 // removeAllFaces()
+detectFace()
