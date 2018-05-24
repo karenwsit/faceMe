@@ -120,6 +120,7 @@ const detectFace = async (image_url) => {
     //TODO: Need to store image_id in the database for when cron job runs. Identify which images are removed and which are newly added to decrease latency. Only update face_set with new images and delete face_set old images
 
     //TODO: Batch face_tokens in arrays of 5 since there is only 1QPS rate limit
+    console.log('face_token:', faces[0].face_token)
     return faces[0].face_token
   } catch (e) {
     console.log('detect Face error:', e)
@@ -169,9 +170,23 @@ const searchFace = async (face_token) => {
       return_result_count: 5
     }
   }
+  try {
+    let response = await request(options)
+    const { results, thresholds } = response
+    let confidenceScores = []
+    results.forEach((result) => {
+      const { confidence, face_token } = result
+      confidenceScores.push(confidence)
+    })
+
+    return results
+  } catch (e) {
+    console.log('search Face error:', e)
+  }
 }
 
 // queryImages()
 // getDetailFaceSet()
 // removeAllFaces()
-detectFace()
+// detectFace()
+searchFace('7a94abcd44649cde880604ebf71b21f0')
