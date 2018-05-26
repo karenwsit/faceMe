@@ -15,6 +15,7 @@ const getDetailFaceSetURL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/g
 const removeFaceURL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/removeface'
 const testImage = 'https://s3-us-west-1.amazonaws.com/uploadedphotostomatch/06ceb71a-d42f-47c7-9b89-2a8eca2b0cd6.JPG'
 const searchFaceURL = 'https://api-us.faceplusplus.com/facepp/v3/search'
+const setUserIdURL = 'https://api-us.faceplusplus.com/facepp/v3/face/setuserid'
 
 const createFaceSetToken = async () => {
   let options = {
@@ -127,14 +128,37 @@ const detectFace = async (image_url) => {
   }
 }
 
+const setUserId = async (user_id, face_token) => {
+  let options = {
+    method: 'POST',
+    uri: setUserIdURL,
+    qs: {
+      api_key: faceKey,
+      api_secret: faceSecret,
+      face_token,
+      user_id
+    },
+    json: true
+  }
+  try {
+    let response = await request(options)
+    console.log('set userId response:', response)
+    return
+  } catch (e) {
+    console.log('detect Face error:', e)
+  }
+}
+
 const QUERY =
 `SELECT
+    uid,
     url,
     array_agg(each_attribute ->> 'original') images
   FROM fbi_wanted
   CROSS JOIN json_array_elements(images) each_attribute
   WHERE (each_attribute -> 'original') is NOT NULL
-  GROUP BY url
+  GROUP BY uid, url
+  LIMIT 10
 `
 
 const queryImages = async () => {
@@ -143,15 +167,16 @@ const queryImages = async () => {
       console.log(err)
     }
     const { rows } = result
+    console.log('ROWS:', rows)
     console.log('rows:', rows.length) // 710
     rows.forEach((person) => {
       console.log('person:', JSON.stringify(person))
-      person.images.forEach((image_url) => {
-        limiter.removeTokens(1, (err, remainingRequests) => {
-          let face_token = detectFace(image_url)
-          limiter.removeTokens(1, (err, remainingRequests) => {
-            addFace(face_token)
-          })
+      const { uid, images } = person
+      images.forEach((image_url) => {
+        limiter.removeTokens(1, async (err, remainingRequests) => {
+          let face_token = await detectFace(image_url)
+          await setUserId(uid, face_token)
+          await addFace(face_token)
         })
       })
     })
@@ -172,10 +197,11 @@ const searchFace = async (face_token) => {
   }
   try {
     let response = await request(options)
-    const { results, thresholds } = response
+    const searchRes = JSON.parse(response)
+    const { results } = searchRes
     let confidenceScores = []
     results.forEach((result) => {
-      const { confidence, face_token } = result
+      const { confidence, user_id, face_token } = result
       confidenceScores.push(confidence)
     })
 
