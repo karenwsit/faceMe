@@ -153,7 +153,7 @@ const setUserId = async (user_id, face_token) => {
   }
 }
 
-const QUERY =
+const QUERY_IMAGES =
 `SELECT
     uid,
     url,
@@ -166,7 +166,7 @@ const QUERY =
 `
 
 const queryImages = async () => {
-  await db.query(QUERY, (err, result) => {
+  await db.query(QUERY_IMAGES, (err, result) => {
     if (err) {
       console.log(err)
     }
@@ -186,6 +186,14 @@ const queryImages = async () => {
     })
   })
 }
+
+const QUERY_MATCHES =
+`SELECT
+    uid,
+    url
+  FROM fbi_wanted
+  WHERE uid IN ($1, $2, $3, $4, $5)
+`
 
 const searchFace = async (face_token) => {
   let options = {
@@ -211,7 +219,14 @@ const searchFace = async (face_token) => {
       confidenceScores.push(confidence)
       userIDs.push(user_id)
     })
-    return results
+    console.log('userIds:', userIDs)
+    await db.query(QUERY_MATCHES, userIDs, (err, result) => {
+      if (err) {
+        console.log(err)
+      }
+      const { rows } = result
+      console.log('search Results from DB:', rows)
+    })
   } catch (e) {
     console.log('search Face error:', e)
   }
