@@ -195,6 +195,14 @@ const QUERY_MATCHES =
   WHERE uid IN ($1, $2, $3, $4, $5)
 `
 
+const combineResults = (faceResults, dbResults) => {
+  return faceResults.map((item) => {
+    const haveSameId = (person) => person.uid === item.user_id
+    const dbResultsHaveSameId = dbResults.find(haveSameId)
+    return Object.assign({}, item, dbResultsHaveSameId)
+  })
+}
+
 const searchFace = async (face_token) => {
   let options = {
     method: 'POST',
@@ -224,12 +232,9 @@ const searchFace = async (face_token) => {
         console.log(err)
       }
       dbResults = result.rows
-      let finalResults = results.map((item) => {
-        const haveSameId = (person) => person.uid === item.user_id
-        const dbResultsHaveSameId = dbResults.find(haveSameId)
-        return Object.assign({}, item, dbResultsHaveSameId)
-      })
+      const finalResults = combineResults(results, dbResults)
       console.log('finalResults:', finalResults)
+      return finalResults
     })
   } catch (e) {
     console.log('search Face error:', e)
