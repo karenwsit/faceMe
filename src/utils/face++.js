@@ -208,24 +208,28 @@ const searchFace = async (face_token) => {
     }
   }
   try {
+    // limiter.removeTokens(1, async (err, remainingRequests) => {
+    //
+    // })
     let response = await request(options)
     const searchRes = JSON.parse(response)
     const { results } = searchRes
-    console.log('search Results:', results)
-    let confidenceScores = []
     let userIDs = []
     results.forEach((result) => {
-      const { confidence, user_id, face_token } = result
-      confidenceScores.push(confidence)
+      const { user_id } = result
       userIDs.push(user_id)
     })
-    console.log('userIds:', userIDs)
-    await db.query(QUERY_MATCHES, userIDs, (err, result) => {
+    db.query(QUERY_MATCHES, userIDs, (err, result) => {
       if (err) {
         console.log(err)
       }
-      const { rows } = result
-      console.log('search Results from DB:', rows)
+      dbResults = result.rows
+      let finalResults = results.map((item) => {
+        const haveSameId = (person) => person.uid === item.user_id
+        const dbResultsHaveSameId = dbResults.find(haveSameId)
+        return Object.assign({}, item, dbResultsHaveSameId)
+      })
+      console.log('finalResults:', finalResults)
     })
   } catch (e) {
     console.log('search Face error:', e)

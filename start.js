@@ -7,10 +7,7 @@ require("babel-core/register")
 require("babel-polyfill")
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
-  console.log('process env node env:', process.env)
 }
-
-
 
 // Import the rest of our application.
 module.exports = require('./server.js')
