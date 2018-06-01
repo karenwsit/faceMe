@@ -1,8 +1,9 @@
 import express from 'express'
 import CryptoJS from 'crypto-js'
 import bodyParser from 'body-parser'
+import getObjectFromS3 from '../src/utils/s3'
 
-const clientSecretKey = process.env.S3_SECRET_ACCESS_KEY
+const clientSecretKey = process.env.AWS_SECRET_ACCESS_KEY
 const expectedMinSize = 0
 const expectedMaxSize = 5000000
 const expectedBucket = 'uploadedphotostomatch'
@@ -207,7 +208,9 @@ router.post("/", function(req, res) {
 router.post("/success", function(req, res) {
   console.log('s3 upload success!')
   console.log('req:', req.body)
+  const { key, uuid, etag } = req.body
   //TODO: Insert into the db once schema is finalized
+  getObjectFromS3(key, uuid, etag)
 })
 
 //Handles the standard DELETE (file) request sent by Fine Uploader S3.

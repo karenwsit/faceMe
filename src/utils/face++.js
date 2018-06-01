@@ -101,10 +101,6 @@ const addFace = async (faceToken) => {
   }
 }
 
-// const queueFaceTokens = (faceToken) => {
-//   faceToken.concat
-// }
-
 const detectFace = async (image_url) => {
   let options = {
     method: 'POST',
@@ -112,7 +108,7 @@ const detectFace = async (image_url) => {
     qs: {
       api_key: faceKey,
       api_secret: faceSecret,
-      image_url: 'http://turitmo.com/wp-content/uploads/2017/11/5NfENkYA.jpg'
+      image_url
     },
     json: true
   }
@@ -122,7 +118,7 @@ const detectFace = async (image_url) => {
 
     //TODO: Need to store image_id in the database for when cron job runs. Identify which images are removed and which are newly added to decrease latency. Only update face_set with new images and delete face_set old images
 
-    //TODO: Batch face_tokens in arrays of 5 since there is only 1QPS rate limit
+    //TODO: Batch face_tokens in arrays of 5 since there is only 1 QPS rate limit
     console.log('face_token:', faces[0].face_token)
     return faces[0].face_token
   } catch (e) {
@@ -216,9 +212,6 @@ const searchFace = async (face_token) => {
     }
   }
   try {
-    // limiter.removeTokens(1, async (err, remainingRequests) => {
-    //
-    // })
     let response = await request(options)
     const searchRes = JSON.parse(response)
     const { results } = searchRes
@@ -264,6 +257,6 @@ const getFaceDetail = async (face_token) => {
 // getDetailFaceSet()
 // removeAllFaces()
 // detectFace()
-// setUserId('')
-searchFace('6090e6c6c8e80550fed10b4de6580f0e')
-// getFaceDetail('5c151486a4510a203e4ba57ecaecfb5c')
+// setUserId()
+// searchFace()
+// getFaceDetail()
