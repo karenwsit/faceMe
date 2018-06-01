@@ -28,7 +28,6 @@ const uploader = new FineUploaderS3({
 
 class Upload extends Component {
   render() {
-    console.log('ACcESS KEY ID:', process.env.AWS_ACCESS_KEY_ID)
     return (
       <div>
         <h2>Upload your photo here to start match</h2>

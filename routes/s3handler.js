@@ -208,9 +208,9 @@ router.post("/", function(req, res) {
 router.post("/success", function(req, res) {
   console.log('s3 upload success!')
   console.log('req:', req.body)
-  const { key, uuid, etag } = req.body
+  const { bucket, key, uuid, etag } = req.body
   //TODO: Insert into the db once schema is finalized
-  getObjectFromS3(key, uuid, etag)
+  getObjectFromS3(bucket, key, uuid, etag)
 })
 
 //Handles the standard DELETE (file) request sent by Fine Uploader S3.

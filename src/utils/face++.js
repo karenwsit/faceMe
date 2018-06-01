@@ -34,7 +34,7 @@ const createFaceSetToken = async () => {
     const { faceset_token } = response
     return faceset_token
   } catch (e) {
-    console.log('create FaceSet error:', e)
+    console.error('create FaceSet error:', e)
   }
 }
 
@@ -54,7 +54,7 @@ const getDetailFaceSet = async () => {
       console.log('faceset details:', response)
     })
   } catch (e) {
-    console.log('get Detail FaceSet error:', e)
+    console.error('get Detail FaceSet error:', e)
   }
 }
 
@@ -75,7 +75,7 @@ const removeAllFaces = async () => {
       console.log('removed all face tokens:', response)
     })
   } catch (e) {
-    console.log('get Detail FaceSet error:', e)
+    console.error('get Detail FaceSet error:', e)
   }
 }
 
@@ -97,7 +97,7 @@ const addFace = async (faceToken) => {
       console.log('addedFace res:', response)
     })
   } catch (e) {
-    console.log('detect FaceSet error:', e)
+    console.error('detect FaceSet error:', e)
   }
 }
 
@@ -122,7 +122,7 @@ const detectFace = async (image_url) => {
     console.log('face_token:', faces[0].face_token)
     return faces[0].face_token
   } catch (e) {
-    console.log('detect Face error:', e)
+    console.error('detect Face error:', e)
   }
 }
 
@@ -145,7 +145,7 @@ const setUserId = async (user_id, face_token) => {
     console.log('set userId response:', response)
     return
   } catch (e) {
-    console.log('detect Face error:', e)
+    console.error('detect Face error:', e)
   }
 }
 
@@ -167,10 +167,7 @@ const queryImages = async () => {
       console.log(err)
     }
     const { rows } = result
-    // console.log('ROWS:', rows)
-    // console.log('rows:', rows.length) // 710
     rows.forEach((person) => {
-      // console.log('person:', JSON.stringify(person))
       const { uid, images } = person
       images.forEach((image_url) => {
         limiter.removeTokens(1, async (err, remainingRequests) => {
@@ -230,7 +227,7 @@ const searchFace = async (face_token) => {
       return finalResults
     })
   } catch (e) {
-    console.log('search Face error:', e)
+    console.error('search Face error:', e)
   }
 }
 
@@ -248,7 +245,7 @@ const getFaceDetail = async (face_token) => {
     let response = await request(options)
     console.log('face detail:', response)
   } catch (e) {
-    console.log('get face detail error:', e)
+    console.error('get face detail error:', e)
   }
 
 }
