@@ -221,7 +221,7 @@ const searchFace = async (face_token) => {
       if (err) {
         console.log(err)
       }
-      dbResults = result.rows
+      const dbResults = result.rows
       const finalResults = combineResults(results, dbResults)
       console.log('finalResults:', finalResults)
       return finalResults
@@ -247,7 +247,11 @@ const getFaceDetail = async (face_token) => {
   } catch (e) {
     console.error('get face detail error:', e)
   }
+}
 
+module.exports = {
+    detectFace,
+    searchFace
 }
 
 // queryImages()

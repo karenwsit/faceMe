@@ -5,25 +5,18 @@ aws.config.update({
 })
 const s3 = new aws.S3()
 
-const getObjectFromS3 = (bucket, key, uuid, etag) => {
-  const signedUrlExpireSeconds = 60*5
+const getObjectURLFromS3 = async (bucket, key) => {
+  const signedUrlExpireSeconds = 60*30
   const getParams = {
     Bucket: bucket,
     Key: key,
     Expires: signedUrlExpireSeconds
   }
-  console.log('HELLO THIS SHOULD BE PRINTING!')
-  const url = s3.getSignedUrl('getObject', getParams)
-  console.log('URL:', url)
-  // s3.getObject(getParams, (err, data) => {
-  //   console.log('why isnt this callback printing')
-  //   if (err) {
-  //     console.log('errror in the getObject:', err)
-  //     return err
-  //   }
-  //   let objectData = data.Body.toString('utf-8')
-  //   console.log('objectData:', objectData)
-  // })
+  try {
+    return await s3.getSignedUrl('getObject', getParams)
+  } catch (err) {
+    console.error('s3 getSignedUrl error:', err)
+  }
 }
 
-module.exports = getObjectFromS3
+module.exports = getObjectURLFromS3
