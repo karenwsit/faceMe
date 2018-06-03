@@ -211,7 +211,9 @@ const searchFace = async (face_token) => {
   try {
     let response = await request(options)
     const searchRes = JSON.parse(response)
-    const { results } = searchRes
+    const { results, thresholds } = searchRes
+    console.log('SEARCH RES:', results)
+    console.log('SEARCH THRESHOLDS:', thresholds)
     let userIDs = []
     results.forEach((result) => {
       const { user_id } = result
@@ -223,12 +225,28 @@ const searchFace = async (face_token) => {
       }
       const dbResults = result.rows
       const finalResults = combineResults(results, dbResults)
-      console.log('finalResults:', finalResults)
-      return finalResults
+      console.log('FINAL RESULTS:', finalResults)
+      const finalFinal = removeDuplicateUsers(finalResults)
+      console.log('Removed Duplicates:', finalFinal)
+      return finalFinal
     })
   } catch (e) {
     console.error('search Face error:', e)
   }
+}
+
+const removeDuplicateUsers = (topFiveResults) => {
+  const hashMap = {}
+  const results = []
+  topFiveResults.forEach((result) => {
+    if (hashMap.hasOwnProperty(result.uid)) {
+      return
+    } else {
+      hashMap[result.uid] = true
+      results.push(result)
+    }
+  })
+  return results
 }
 
 const getFaceDetail = async (face_token) => {
