@@ -210,12 +210,17 @@ router.post("/success", async function(req, res) {
   console.log('s3 upload success!')
   console.log('req:', req.body)
   const { bucket, key } = req.body
+
   //TODO: Insert into the db once schema is finalized?
   const signedUrl = await getObjectURLFromS3(bucket, key)
   const newFaceToken = await faceUtils.detectFace(signedUrl)
-  console.log('newFaceToken for the dua of lipa:', newFaceToken)
-  const finalResults = await faceUtils.searchFace(newFaceToken)
-  console.log('finalResults in the /success route:', finalResults)
+
+  //TODO: REFACTOR HERE. There must be a better way to do this in async await/ ES7
+  await faceUtils.searchFace(newFaceToken, (final) => {
+    console.log('finalResults in the /success route:', final)
+    return final
+  })
+
 })
 
 //Handles the standard DELETE (file) request sent by Fine Uploader S3.

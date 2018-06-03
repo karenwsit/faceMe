@@ -196,7 +196,7 @@ const combineResults = (faceResults, dbResults) => {
   })
 }
 
-const searchFace = async (face_token) => {
+const searchFace = async (face_token, callback) => {
   let options = {
     method: 'POST',
     uri: searchFaceURL,
@@ -212,8 +212,8 @@ const searchFace = async (face_token) => {
     let response = await request(options)
     const searchRes = JSON.parse(response)
     const { results, thresholds } = searchRes
-    console.log('SEARCH RES:', results)
-    console.log('SEARCH THRESHOLDS:', thresholds)
+
+    //TODO: Thresholds useful? Maybe not
     let userIDs = []
     results.forEach((result) => {
       const { user_id } = result
@@ -225,10 +225,8 @@ const searchFace = async (face_token) => {
       }
       const dbResults = result.rows
       const finalResults = combineResults(results, dbResults)
-      console.log('FINAL RESULTS:', finalResults)
       const finalFinal = removeDuplicateUsers(finalResults)
-      console.log('Removed Duplicates:', finalFinal)
-      return finalFinal
+      callback(finalFinal)
     })
   } catch (e) {
     console.error('search Face error:', e)
