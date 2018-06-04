@@ -26,6 +26,10 @@ const uploader = new FineUploaderS3({
     }
 })
 
+uploader.on('complete', (id, name, response) => {
+   console.log('RESPONSE:', response)
+})
+
 class Upload extends Component {
   render() {
     return (
@@ -37,4 +41,4 @@ class Upload extends Component {
   }
 }
 
-export default Upload;
+export default Upload
