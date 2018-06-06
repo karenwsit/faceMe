@@ -3,6 +3,7 @@ import React, { Component } from "react"
 import FineUploaderS3 from 'fine-uploader-wrappers/s3'
 import Gallery from 'react-fine-uploader'
 import 'react-fine-uploader/gallery/gallery.css'
+import Results from './Results'
 
 const uploader = new FineUploaderS3({
     options: {
@@ -44,10 +45,15 @@ class Upload extends Component {
 
   render() {
     console.log('STATE:', this.state.results)
+    const resultsReceived = (Object.keys(this.state.results).length === 0 && this.state.results.constructor === Object)
+
     return (
       <div>
         <h2>Upload your photo here to start match</h2>
-        <Gallery uploader={ uploader } />
+        { resultsReceived
+            ? (<Gallery uploader={ uploader } />)
+            : (<Results/>)
+        }
       </div>
     );
   }
