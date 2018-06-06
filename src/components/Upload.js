@@ -26,12 +26,24 @@ const uploader = new FineUploaderS3({
     }
 })
 
-uploader.on('complete', (id, name, response) => {
-   console.log('RESPONSE:', response)
-})
+
 
 class Upload extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {results: {}}
+  }
+
+  componentDidMount() {
+    uploader.on('complete', (id, name, response) => {
+       if (response) {
+         this.setState({results: response})
+       }
+    })
+  }
+
   render() {
+    console.log('STATE:', this.state.results)
     return (
       <div>
         <h2>Upload your photo here to start match</h2>
