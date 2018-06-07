@@ -45,19 +45,13 @@ class Upload extends Component {
     uploader.on('complete', (id, name, response) => {
        if (response) {
          const results = transformToArray(response)
-         console.log('results:', results)
-         this.setState(() => {
-            return {results};
-          });
+         this.setState({results})
        }
     })
   }
 
   render() {
-    console.log('STATE:', this.state.results)
     const resultsReceived = this.state.results.length !== 0
-    console.log('resultsReceived:', resultsReceived)
-
     return (
       <div>
         <h2>Upload your photo here to start match</h2>
