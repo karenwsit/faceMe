@@ -184,7 +184,7 @@ const QUERY_MATCHES =
 `SELECT
     uid,
     url,
-    images[0]
+    images->0->'original' image_url
   FROM fbi_wanted
   WHERE uid IN ($1, $2, $3, $4, $5)
 `
