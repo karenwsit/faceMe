@@ -30,7 +30,9 @@ const uploader = new FineUploaderS3({
 const transformToArray = (results) => {
   let newResults = []
   for (const key in results) {
-    newResults.push(results[key])
+    if (key !== 'success') {
+      newResults.push(results[key])
+    }
   }
   return newResults
 }
