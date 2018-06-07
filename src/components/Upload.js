@@ -56,10 +56,16 @@ class Upload extends Component {
     const resultsReceived = this.state.results.length !== 0
     return (
       <div>
-        <h2>Upload your photo here to start match</h2>
+
         { resultsReceived
-            ? (<Results results={ this.state.results }/>)
-            : (<Gallery uploader={ uploader } />)
+            ? (<div>
+                <h2>Here are your top matches</h2>
+                <Results results={ this.state.results }/>
+              </div>)
+            : (<div>
+                <h2>Upload your photo here to start match</h2>
+                <Gallery uploader={ uploader } />
+              </div>)
         }
       </div>
     );
