@@ -183,7 +183,8 @@ const queryImages = async () => {
 const QUERY_MATCHES =
 `SELECT
     uid,
-    url
+    url,
+    images[0]
   FROM fbi_wanted
   WHERE uid IN ($1, $2, $3, $4, $5)
 `

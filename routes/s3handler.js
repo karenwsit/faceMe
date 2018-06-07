@@ -217,7 +217,7 @@ router.post("/success", async function(req, res) {
 
   //TODO: REFACTOR HERE. There must be a better way to do this in async await/ ES7
   await faceUtils.searchFace(newFaceToken, (final) => {
-    // console.log('finalResults in the /success route:', final)
+    console.log('finalResults in the /success route:', final)
     res.send(final)
   })
 })
