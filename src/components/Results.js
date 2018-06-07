@@ -1,13 +1,13 @@
-import React, { Component } from "react";
+import React from "react";
 
-class Results extends Component {
-  render() {
-    return (
-      <div className="resultsContainer">
-        <h6>Guestbook Messages</h6>
-      </div>
-    )
-  }
+const Results = (props) => {
+  console.log(props)
+  return (
+    <div className="resultsContainer">
+      <h6>Here are your top matches</h6>
+      <div>{props.results}</div>
+    </div>
+  )
 }
 
 export default Results;

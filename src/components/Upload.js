@@ -27,32 +27,43 @@ const uploader = new FineUploaderS3({
     }
 })
 
-
+const transformToArray = (results) => {
+  let newResults = []
+  for (const key in results) {
+    newResults.push(results[key])
+  }
+  return newResults
+}
 
 class Upload extends Component {
   constructor(props) {
     super(props)
-    this.state = {results: {}}
+    this.state = {results: []}
   }
 
   componentDidMount() {
     uploader.on('complete', (id, name, response) => {
        if (response) {
-         this.setState({results: response})
+         const results = transformToArray(response)
+         console.log('results:', results)
+         this.setState(() => {
+            return {results};
+          });
        }
     })
   }
 
   render() {
     console.log('STATE:', this.state.results)
-    const resultsReceived = (Object.keys(this.state.results).length === 0 && this.state.results.constructor === Object)
+    const resultsReceived = this.state.results.length !== 0
+    console.log('resultsReceived:', resultsReceived)
 
     return (
       <div>
         <h2>Upload your photo here to start match</h2>
         { resultsReceived
-            ? (<Gallery uploader={ uploader } />)
-            : (<Results/>)
+            ? (<Results results={ this.state.results }/>)
+            : (<Gallery uploader={ uploader } />)
         }
       </div>
     );
