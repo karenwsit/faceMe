@@ -59,7 +59,6 @@ class Upload extends Component {
 
         { resultsReceived
             ? (<div>
-                <h2>Here are your top matches</h2>
                 <Results results={ this.state.results }/>
               </div>)
             : (<div>

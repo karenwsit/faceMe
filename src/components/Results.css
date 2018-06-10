@@ -1,0 +1,20 @@
+.resultsContainer {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 50px
+}
+
+.uploadContainer {
+  display: flex;
+  flex-direction: column
+}
+
+.topMatchesContainer {
+  display: flex;
+  flex-direction: column
+}
+
+.topImages {
+  display: flex;
+  align-items: flex-end
+}
