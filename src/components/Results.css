@@ -9,12 +9,22 @@
   flex-direction: column
 }
 
+.uploadImage {
+  width: 100%;
+  max-width: 500px
+}
+
 .topMatchesContainer {
   display: flex;
   flex-direction: column
 }
 
-.topImages {
+.topImagesContainer {
   display: flex;
   align-items: flex-end
+}
+
+.resultImage {
+  width: 100%;
+  max-width: 500px
 }

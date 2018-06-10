@@ -10,17 +10,17 @@ const Results = (props) => {
     <div className="resultsContainer">
       <div className="uploadContainer">
         <h2>Your Upload</h2>
-        <img src={originalUpload} alt='original upload' />
+        <img className="uploadImage" src={originalUpload} alt='original upload' />
       </div>
       <div className="topMatchesContainer">
         <h2>Your Top Matches</h2>
-        <div className="topImages">
+        <div className="topImagesContainer">
           { results.map((item) => {
               return (
               <figure>
-                <img className="result" src={item.image_url} key={item.uid} confidence={item.confidence} alt={item.url} />
+                <img className="resultImage" src={item.image_url} key={item.uid} confidence={item.confidence} alt={item.url} />
                 <figcaption>
-                  <a href={item.url}>NAME</a>
+                  <a href={item.url}>{item.title}</a>
                 </figcaption>
               </figure>
             )

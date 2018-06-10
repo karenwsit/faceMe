@@ -183,6 +183,7 @@ const queryImages = async () => {
 const QUERY_MATCHES =
 `SELECT
     uid,
+    title,
     url,
     images->0->'original' image_url
   FROM fbi_wanted

@@ -28,8 +28,9 @@ const updater = async () => {
   try {
     const response = await getWantedList()
     response.forEach((item) => {
-      db.query('INSERT INTO fbi_wanted(uid, subject, url, images) values ($1,$2,$3,$4)', [
+      db.query('INSERT INTO fbi_wanted(uid, title, subject, url, images) values ($1,$2,$3,$4,$5)', [
         item.uid,
+        item.title,
         item.subjects,
         item.url,
         JSON.stringify(item.images)
