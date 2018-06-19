@@ -5,6 +5,8 @@
 .env.development.local
 .env.test.local
 .env.production.local
+.git
+.github
 
 # dependencies
-/node_modules
+node_modules
