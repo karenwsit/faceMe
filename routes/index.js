@@ -1,9 +1,9 @@
-var express = require('express')
+import express from 'express'
 
-var router = express.Router()
+const router = express.Router()
 
 router.get('/', (req, res) => {
-  res.send('HERROROOOOOO THERE')
+  res.send('this is the home page fool!')
 })
 
 module.exports = router
