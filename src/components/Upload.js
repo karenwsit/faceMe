@@ -8,7 +8,7 @@ import Results from './Results'
 const uploader = new FineUploaderS3({
     options: {
         request: {
-            endpoint: 'uploadedphotostomatch.s3.amazonaws.com',
+            endpoint: process.env.EXPECTED_HOST_NAME,
             accessKey: process.env.REACT_APP_AWS_ACCESS_KEY_ID
         },
         validation: {

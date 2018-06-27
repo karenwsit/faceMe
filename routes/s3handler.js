@@ -4,11 +4,11 @@ import bodyParser from 'body-parser'
 import getObjectURLFromS3 from '../src/utils/s3'
 import faceUtils from '../src/utils/face++'
 
-const clientSecretKey = process.env.AWS_SECRET_ACCESS_KEY
+const CLIENT_SECRET_KEY = process.env.AWS_SECRET_ACCESS_KEY
 const expectedMinSize = 0
 const expectedMaxSize = 5000000
-const expectedBucket = 'uploadedphotostomatch'
-const expectedHostname = 'uploadedphotostomatch.s3.amazonaws.com'
+const EXPECTED_BUCKET = process.env.EXPECTED_BUCKET
+const EXPECTED_HOST_NAME = process.env.EXPECTED_HOST_NAME
 
 const router = express.Router()
 
@@ -44,7 +44,7 @@ function signRestRequest(req, res) {
 }
 
 function signV2RestRequest(headersStr) {
-    return getV2SignatureKey(clientSecretKey, headersStr);
+    return getV2SignatureKey(CLIENT_SECRET_KEY, headersStr);
 }
 
 function signV4RestRequest(headersStr) {
@@ -52,7 +52,7 @@ function signV4RestRequest(headersStr) {
         hashedCanonicalRequest = CryptoJS.SHA256(matches[3]),
         stringToSign = headersStr.replace(/(.+s3\/aws4_request\n)[\s\S]+/, '$1' + hashedCanonicalRequest);
 
-    return getV4SignatureKey(clientSecretKey, matches[1], matches[2], "s3", stringToSign);
+    return getV4SignatureKey(CLIENT_SECRET_KEY, matches[1], matches[2], "s3", stringToSign);
 }
 
 // Signs "simple" (non-chunked) upload requests.
@@ -78,7 +78,7 @@ function signPolicy(req, res) {
 }
 
 function signV2Policy(base64Policy) {
-    return getV2SignatureKey(clientSecretKey, base64Policy);
+    return getV2SignatureKey(CLIENT_SECRET_KEY, base64Policy);
 }
 
 function signV4Policy(policy, base64Policy) {
@@ -93,16 +93,16 @@ function signV4Policy(policy, base64Policy) {
     }
 
     var matches = /.+\/(.+)\/(.+)\/s3\/aws4_request/.exec(credentialCondition);
-    return getV4SignatureKey(clientSecretKey, matches[1], matches[2], "s3", base64Policy);
+    return getV4SignatureKey(CLIENT_SECRET_KEY, matches[1], matches[2], "s3", base64Policy);
 }
 
 // Ensures the REST request is targeting the correct bucket for chunking support.
 function isValidRestRequest(headerStr, version) {
     if (version === 4) {
-        return new RegExp("host:" + expectedHostname).exec(headerStr) != null;
+        return new RegExp("host:" + EXPECTED_HOST_NAME).exec(headerStr) != null;
     }
 
-    return new RegExp("\/" + expectedBucket + "\/.+$").exec(headerStr) != null;
+    return new RegExp("\/" + EXPECTED_BUCKET + "\/.+$").exec(headerStr) != null;
 }
 
 // Ensures the policy document associated with a "simple" (non-chunked) request is
@@ -122,7 +122,7 @@ function isPolicyValid(policy) {
         }
     });
 
-    isValid = bucket === expectedBucket;
+    isValid = bucket === EXPECTED_BUCKET;
 
     // If expectedMinSize and expectedMax size are not null, then
     // ensure that the client and server have agreed upon the exact same

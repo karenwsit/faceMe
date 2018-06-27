@@ -2,7 +2,6 @@ import React from "react"
 import "./Results.css"
 
 const Results = (props) => {
-  console.log(props.results)
   const originalUpload = props.results.pop()
   const results = props.results
 
