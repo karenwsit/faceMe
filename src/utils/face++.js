@@ -6,32 +6,33 @@ var RateLimiter = require('limiter').RateLimiter
 var limiter = new RateLimiter(1, 'second')
 var fs = require('fs')
 
-const faceKey = process.env.FACEME_API_KEY
-const faceSecret = process.env.FACEME_API_SECRET
-const faceSetToken = process.env.FACE_SET_TOKEN
-const addFaceURL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/addface'
-const createFaceSetURL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/create'
-const detectFaceURL = 'https://api-us.faceplusplus.com/facepp/v3/detect'
-const getDetailFaceSetURL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/getdetail'
-const removeFaceURL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/removeface'
-const testImage = 'https://s3-us-west-1.amazonaws.com/uploadedphotostomatch/06ceb71a-d42f-47c7-9b89-2a8eca2b0cd6.JPG'
-const searchFaceURL = 'https://api-us.faceplusplus.com/facepp/v3/search'
-const setUserIdURL = 'https://api-us.faceplusplus.com/facepp/v3/face/setuserid'
-const getFaceDetailURL = 'https://api-us.faceplusplus.com/facepp/v3/face/getdetail'
+const FACE_KEY = process.env.FACEME_API_KEY
+const FACE_SECRET = process.env.FACEME_API_SECRET
+const FACE_SET_TOKEN = process.env.FACE_SET_TOKEN
+const ADD_FACE_URL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/addface'
+const CREATE_FACE_SET_URL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/create'
+const DETECT_FACE_URL = 'https://api-us.faceplusplus.com/facepp/v3/detect'
+const GET_DETAIL_FACE_SET_URL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/getdetail'
+const REMOVE_FACE_URL = 'https://api-us.faceplusplus.com/facepp/v3/faceset/removeface'
+const TEST_IMAGE = 'https://s3-us-west-1.amazonaws.com/uploadedphotostomatch/06ceb71a-d42f-47c7-9b89-2a8eca2b0cd6.JPG'
+const SEARCH_FACE_URL = 'https://api-us.faceplusplus.com/facepp/v3/search'
+const SET_USER_ID_URL = 'https://api-us.faceplusplus.com/facepp/v3/face/setuserid'
+const GET_FACE_DETAIL_URL = 'https://api-us.faceplusplus.com/facepp/v3/face/getdetail'
 
 const createFaceSetToken = async () => {
   let options = {
     method: 'POST',
-    uri: createFaceSetURL,
+    uri: CREATE_FACE_SET_URL,
     qs: {
-      api_key: faceKey,
-      api_secret: faceSecret
+      api_key: FACE_KEY,
+      api_secret: FACE_SECRET
     },
     json: true
   }
   try {
     let response = await request(options)
     const { faceset_token } = response
+    console.log('faceset_token:', faceset_token)
     return faceset_token
   } catch (e) {
     console.error('create FaceSet error:', e)
@@ -41,11 +42,11 @@ const createFaceSetToken = async () => {
 const getDetailFaceSet = async () => {
   let options = {
     method: 'POST',
-    uri: getDetailFaceSetURL,
+    uri: GET_DETAIL_FACE_SET_URL,
     qs: {
-      api_key: faceKey,
-      api_secret: faceSecret,
-      faceset_token: faceSetToken
+      api_key: FACE_KEY,
+      api_secret: FACE_SECRET,
+      faceset_token: FACE_SET_TOKEN
     }
   }
   try {
@@ -61,11 +62,11 @@ const getDetailFaceSet = async () => {
 const removeAllFaces = async () => {
   let options = {
     method: 'POST',
-    uri: removeFaceURL,
+    uri: REMOVE_FACE_URL,
     qs: {
-      api_key: faceKey,
-      api_secret: faceSecret,
-      faceset_token: faceSetToken,
+      api_key: FACE_KEY,
+      api_secret: FACE_SECRET,
+      faceset_token: FACE_SET_TOKEN,
       face_tokens: "RemoveAllFaceTokens"
     }
   }
@@ -82,11 +83,11 @@ const removeAllFaces = async () => {
 const addFace = async (faceToken) => {
   let options = {
     method: 'POST',
-    uri: addFaceURL,
+    uri: ADD_FACE_URL,
     qs: {
-      api_key: faceKey,
-      api_secret: faceSecret,
-      faceset_token: faceSetToken,
+      api_key: FACE_KEY,
+      api_secret: FACE_SECRET,
+      faceset_token: FACE_SET_TOKEN,
       face_tokens: faceToken
     },
     json: true
@@ -104,10 +105,10 @@ const addFace = async (faceToken) => {
 const detectFace = async (image_url) => {
   let options = {
     method: 'POST',
-    uri: detectFaceURL,
+    uri: DETECT_FACE_URL,
     qs: {
-      api_key: faceKey,
-      api_secret: faceSecret,
+      api_key: FACE_KEY,
+      api_secret: FACE_SECRET,
       image_url
     },
     json: true
@@ -119,8 +120,12 @@ const detectFace = async (image_url) => {
     //TODO: Need to store image_id in the database for when cron job runs. Identify which images are removed and which are newly added to decrease latency. Only update face_set with new images and delete face_set old images
 
     //TODO: Batch face_tokens in arrays of 5 since there is only 1 QPS rate limit
-    console.log('face_token:', faces[0].face_token)
-    return faces[0].face_token
+
+    if (faces.length === 0) {
+      console.error('No face was detected from image.')
+    } else {
+      return faces[0].face_token
+    }
   } catch (e) {
     console.error('detect Face error:', e)
   }
@@ -131,10 +136,10 @@ const setUserId = async (user_id, face_token) => {
   console.log('setting UserID face_token:', face_token)
   let options = {
     method: 'POST',
-    uri: setUserIdURL,
+    uri: SET_USER_ID_URL,
     qs: {
-      api_key: faceKey,
-      api_secret: faceSecret,
+      api_key: FACE_KEY,
+      api_secret: FACE_SECRET,
       face_token,
       user_id
     },
@@ -155,10 +160,9 @@ const QUERY_IMAGES =
     url,
     array_agg(each_attribute ->> 'original') images
   FROM fbi_wanted
-  CROSS JOIN json_array_elements(images) each_attribute
+  CROSS JOIN json_array_elements(images::json) each_attribute
   WHERE (each_attribute -> 'original') is NOT NULL
   GROUP BY uid, url
-  LIMIT 5
 `
 
 const queryImages = async () => {
@@ -171,9 +175,12 @@ const queryImages = async () => {
       const { uid, images } = person
       images.forEach((image_url) => {
         limiter.removeTokens(1, async (err, remainingRequests) => {
+          console.log('image_url:', image_url)
           let face_token = await detectFace(image_url)
-          await setUserId(uid, face_token)
-          await addFace(face_token)
+          if (face_token) {
+            await setUserId(uid, face_token)
+            await addFace(face_token)
+          }
         })
       })
     })
@@ -201,12 +208,12 @@ const combineResults = (faceResults, dbResults) => {
 const searchFace = async (face_token, callback) => {
   let options = {
     method: 'POST',
-    uri: searchFaceURL,
+    uri: SEARCH_FACE_URL,
     qs: {
-      api_key: faceKey,
-      api_secret: faceSecret,
+      api_key: FACE_KEY,
+      api_secret: FACE_SECRET,
       face_token,
-      faceset_token: faceSetToken,
+      faceset_token: FACE_SET_TOKEN,
       return_result_count: 5
     }
   }
@@ -252,10 +259,10 @@ const removeDuplicateUsers = (topFiveResults) => {
 const getFaceDetail = async (face_token) => {
   let options = {
     method: 'POST',
-    uri: getFaceDetailURL,
+    uri: GET_FACE_DETAIL_URL,
     qs: {
-      api_key: faceKey,
-      api_secret: faceSecret,
+      api_key: FACE_KEY,
+      api_secret: FACE_SECRET,
       face_token
     }
   }
@@ -272,7 +279,8 @@ module.exports = {
     searchFace
 }
 
-// queryImages()
+
+queryImages()
 // getDetailFaceSet()
 // removeAllFaces()
 // detectFace()

@@ -5,10 +5,12 @@ import Gallery from 'react-fine-uploader'
 import 'react-fine-uploader/gallery/gallery.css'
 import Results from './Results'
 
+console.log('YOOOO:', process.env.REACT_APP_EXPECTED_HOST_NAME)
+
 const uploader = new FineUploaderS3({
     options: {
         request: {
-            endpoint: process.env.EXPECTED_HOST_NAME,
+            endpoint: process.env.REACT_APP_EXPECTED_HOST_NAME,
             accessKey: process.env.REACT_APP_AWS_ACCESS_KEY_ID
         },
         validation: {

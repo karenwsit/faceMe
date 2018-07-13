@@ -7,8 +7,8 @@ import faceUtils from '../src/utils/face++'
 const CLIENT_SECRET_KEY = process.env.AWS_SECRET_ACCESS_KEY
 const expectedMinSize = 0
 const expectedMaxSize = 5000000
-const EXPECTED_BUCKET = process.env.EXPECTED_BUCKET
-const EXPECTED_HOST_NAME = process.env.EXPECTED_HOST_NAME
+const EXPECTED_BUCKET = process.env.REACT_APP_EXPECTED_BUCKET
+const EXPECTED_HOST_NAME = process.env.REACT_APP_EXPECTED_HOST_NAME
 
 const router = express.Router()
 
