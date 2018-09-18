@@ -132,8 +132,6 @@ const detectFace = async (image_url) => {
 }
 
 const setUserId = async (user_id, face_token) => {
-  console.log('setting UserID user_id:', user_id)
-  console.log('setting UserID face_token:', face_token)
   let options = {
     method: 'POST',
     uri: SET_USER_ID_URL,
@@ -175,7 +173,6 @@ const queryImages = async () => {
       const { uid, images } = person
       images.forEach((image_url) => {
         limiter.removeTokens(1, async (err, remainingRequests) => {
-          console.log('image_url:', image_url)
           let face_token = await detectFace(image_url)
           if (face_token) {
             await setUserId(uid, face_token)
@@ -280,7 +277,7 @@ module.exports = {
 }
 
 
-queryImages()
+// queryImages()
 // getDetailFaceSet()
 // removeAllFaces()
 // detectFace()

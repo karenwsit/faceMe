@@ -5,8 +5,6 @@ import Gallery from 'react-fine-uploader'
 import 'react-fine-uploader/gallery/gallery.css'
 import Results from './Results'
 
-console.log('YOOOO:', process.env.REACT_APP_EXPECTED_HOST_NAME)
-
 const uploader = new FineUploaderS3({
     options: {
         request: {
