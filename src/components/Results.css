@@ -1,5 +1,6 @@
 .resultsContainer {
   display: flex;
+  flex-direction: column;
   justify-content: space-around;
   margin-top: 50px
 }
@@ -10,8 +11,9 @@
 }
 
 .uploadImage {
+  align-self: center;
   width: 100%;
-  max-width: 500px
+  max-width: 400px
 }
 
 .topMatchesContainer {
@@ -26,5 +28,5 @@
 
 .resultImage {
   width: 100%;
-  max-width: 500px
+  max-width: 400px
 }

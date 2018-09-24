@@ -207,7 +207,7 @@ router.post("/", function(req, res) {
 });
 
 router.post("/success", async function(req, res) {
-  console.log('s3 upload success!')
+  console.log('s3 upload success!!!!!!!! <3 <3 <3 ')
   // console.log('req:', req.body)
   const { bucket, key } = req.body
 

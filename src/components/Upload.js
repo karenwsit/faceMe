@@ -43,9 +43,13 @@ class Upload extends Component {
     this.state = {results: []}
   }
 
+  componentWillUnmount() {
+    this.isCancelled = true
+  }
+
   componentDidMount() {
     uploader.on('complete', (id, name, response) => {
-       if (response) {
+       if (!this.isCancelled && response) {
          const results = transformToArray(response)
          this.setState({results})
        }
@@ -53,6 +57,7 @@ class Upload extends Component {
   }
 
   render() {
+    console.log('this.props:', this.props)
     const resultsReceived = this.state.results.length !== 0
     return (
       <div>

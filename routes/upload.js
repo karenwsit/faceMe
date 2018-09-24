@@ -216,6 +216,7 @@ function getChunkFilename(index, count) {
 }
 
 router.get('/', (req, res) => {
+  console.log('GETTINGGGG ULOAD ROUTE')
   res.send('hitting the upload GET')
 })
 
