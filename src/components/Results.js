@@ -2,8 +2,8 @@ import React from "react"
 import "./Results.css"
 
 const Results = (props) => {
-  const originalUpload = props.results.pop()
-  const results = props.results
+  const originalUpload = props.results[props.results.length - 1]
+  const results = props.results.slice(0,props.results.length)
 
   return (
     <div className="resultsContainer">

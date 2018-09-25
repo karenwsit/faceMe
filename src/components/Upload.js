@@ -43,8 +43,10 @@ class Upload extends Component {
     this.state = {results: []}
   }
 
-  componentWillUnmount() {
-    this.isCancelled = true
+  componentDidUpdate(prevProps) {
+    if (this.props.location.key !== prevProps.location.key) {
+      this.setState({results: []})
+    }
   }
 
   componentDidMount() {
@@ -57,7 +59,6 @@ class Upload extends Component {
   }
 
   render() {
-    console.log('this.props:', this.props)
     const resultsReceived = this.state.results.length !== 0
     return (
       <div>

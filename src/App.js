@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {
+  BrowserRouter as Router,
   NavLink,
   Route,
   Switch
@@ -10,13 +11,9 @@ import Upload from "./components/Upload"
 import './App.css'
 
 class App extends Component {
-
-  redirectToTarget = () => {
-    this.props.history.push(`/upload`)
-  }
-
   render() {
     return (
+      <Router>
         <div className="App">
           <header className="App-header">
             <h1 className="FaceMe">Welcome to FaceMe to FindMe</h1>
@@ -31,11 +28,12 @@ class App extends Component {
           <div className="content">
             <Switch>
               <Route exact path="/" component={Home}/>
-              <Route exact path="/about" component={About}/>
-              <Route exact path="/upload" onClick={this.redirectToTarget} render={ props => <Upload { ...props } />}/>
+              <Route path="/about" component={About}/>
+              <Route path="/upload" render={ props => <Upload { ...props } />}/>
             </Switch>
           </div>
         </div>
+      </Router>
     )
   }
 }
