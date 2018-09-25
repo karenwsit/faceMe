@@ -46,6 +46,8 @@ class Upload extends Component {
   componentDidUpdate(prevProps) {
     if (this.props.location.key !== prevProps.location.key) {
       this.setState({results: []})
+      // TODO: refactor to not have to reload a page but have state/props allow second upload
+      window.location.reload()
     }
   }
 
